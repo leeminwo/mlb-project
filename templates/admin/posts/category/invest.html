@@ -1,0 +1,68 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}투자게시판 글쓰기 - 관리자{% endblock %}
+
+{% block page_title %}투자게시판 글쓰기{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+  <div class="content-header">
+    <h2>📝 투자게시판 글쓰기 (관리자)</h2>
+    <p class="subtitle">관리자 권한으로 투자게시판에 글을 작성합니다.</p>
+  </div>
+
+  <div class="content-body">
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    {% if success %}
+      <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+
+    <form method="post" action="/admin/posts/invest/write" enctype="multipart/form-data" class="admin-form">
+      <div class="form-group">
+        <label for="category">말머리</label>
+        <select name="category" id="category" required>
+          <option value="">-- 선택 --</option>
+          <option value="비트코인">비트코인</option>
+          <option value="국내주식">국내주식</option>
+          <option value="해외주식">해외주식</option>
+          <option value="종목토론">종목토론</option>
+          <option value="정보공유">정보공유</option>
+          <option value="이벤트">이벤트</option>
+          <option value="공지">공지</option>
+          <option value="잡담">잡담</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" name="title" id="title" value="{{ title or '' }}" placeholder="제목을 입력하세요" required>
+      </div>
+
+      <div class="form-group">
+        <label for="content">내용</label>
+        <textarea name="content" id="content" rows="15" placeholder="내용을 입력하세요" required>{{ content or '' }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="author">작성자</label>
+        <input type="text" name="author" id="author" value="{{ author or '' }}" placeholder="작성자 닉네임을 입력하세요" required>
+        <small class="form-help">관리자는 다른 사용자 이름으로 글을 작성할 수 있습니다.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="files">파일 첨부</label>
+        <input type="file" name="files" multiple>
+        <small class="form-help">여러 파일을 선택할 수 있습니다.</small>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">글 작성 완료</button>
+        <a href="/admin" class="btn btn-secondary">취소</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

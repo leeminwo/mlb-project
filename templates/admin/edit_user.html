@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 수정</title>
+    <link rel="stylesheet" href="/static/css/admin/popup.css">
+</head>
+<body>
+<div class="popup-container">
+    <h2>✏️ 사용자 수정</h2>
+    <form method="post" action="/admin/users/edit/{{ user.id }}">
+        <label for="name">이름</label>
+        <input type="text" id="name" name="name" value="{{ user.name }}" required>
+        <label for="nickname">닉네임</label>
+        <input type="text" id="nickname" name="nickname" value="{{ user.nickname or '' }}" required>
+        <label for="password">새 비밀번호 (선택)</label>
+        <input type="password" id="password" name="password" placeholder="변경 시에만 입력">
+
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" value="{{ user.email or '' }}">
+
+        <label for="role">역할</label>
+        <select id="role" name="role">
+            <option value="user" {% if user.role == 'user' %}selected{% endif %}>일반</option>
+            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>관리자</option>
+        </select>
+
+        <label for="status">상태</label>
+        <select id="status" name="status">
+            <option value="active" {% if user.status == 'active' %}selected{% endif %}>활성</option>
+            <option value="inactive" {% if user.status == 'inactive' %}selected{% endif %}>비활성</option>
+        </select>
+
+        <label for="level">등급</label>
+        <select id="level" name="level">
+            <option value="1" {% if user.level == 1 %}selected{% endif %}>1 - 새내기</option>
+            <option value="2" {% if user.level == 2 %}selected{% endif %}>2 - 초보자</option>
+            <option value="3" {% if user.level == 3 %}selected{% endif %}>3 - 견습생</option>
+            <option value="4" {% if user.level == 4 %}selected{% endif %}>4 - 수습생</option>
+            <option value="5" {% if user.level == 5 %}selected{% endif %}>5 - 일반인</option>
+            <option value="6" {% if user.level == 6 %}selected{% endif %}>6 - 열성회원</option>
+            <option value="7" {% if user.level == 7 %}selected{% endif %}>7 - 우수회원</option>
+            <option value="8" {% if user.level == 8 %}selected{% endif %}>8 - 전문가</option>
+            <option value="9" {% if user.level == 9 %}selected{% endif %}>9 - 마스터</option>
+            <option value="10" {% if user.level == 10 %}selected{% endif %}>10 - 전설</option>
+        </select>
+
+        <label for="exp">경험치</label>
+        <input type="number" id="exp" name="exp" value="{{ user.exp or 0 }}" min="0">
+
+        <button type="submit" class="btn">저장</button>
+    </form>
+</div>
+
+<script>
+if (window.location.search.includes("success=true")) {
+    window.opener.location.reload();
+    window.close();
+}
+</script>
+</body>
+</html>

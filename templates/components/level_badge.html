@@ -1,0 +1,78 @@
+<!-- 등급 배지 컴포넌트 -->
+{% macro level_badge(user_level_info, size='normal') %}
+  {% if user_level_info %}
+    <span class="level-badge level-{{ user_level_info.level }} level-badge-{{ size }}">
+      <span class="level-icon">
+        {% if user_level_info.level <= 3 %}⭐{% elif user_level_info.level <= 5 %}🌟{% elif user_level_info.level <= 7 %}💫{% elif user_level_info.level <= 9 %}✨{% else %}🔥{% endif %}
+      </span>
+      <span>Lv.{{ user_level_info.level }} {{ user_level_info.level_name }}</span>
+    </span>
+  {% endif %}
+{% endmacro %}
+
+<!-- 등급 정보 카드 컴포넌트 -->
+{% macro level_card(user_level_info) %}
+  {% if user_level_info %}
+    <div class="level-card">
+      <h3>🎯 회원 등급 정보</h3>
+      
+      <div class="level-info">
+        <span class="level-badge level-badge-lg level-{{ user_level_info.level }}">
+          <span class="level-icon">
+            {% if user_level_info.level <= 3 %}⭐{% elif user_level_info.level <= 5 %}🌟{% elif user_level_info.level <= 7 %}💫{% elif user_level_info.level <= 9 %}✨{% else %}🔥{% endif %}
+          </span>
+          <span>Lv.{{ user_level_info.level }} {{ user_level_info.level_name }}</span>
+        </span>
+      </div>
+      
+      <div>
+        <div>경험치: {{ user_level_info.exp }} / {{ user_level_info.next_level_exp }}</div>
+        <div class="exp-bar">
+          <div class="exp-progress" style="width: {{ user_level_info.exp_progress }}%"></div>
+        </div>
+        <div style="font-size: 12px; color: #666;">
+          다음 등급까지 {{ user_level_info.next_level_exp - user_level_info.exp }} 경험치 필요
+        </div>
+      </div>
+      
+      <div class="level-stats">
+        <div class="stat-item">
+          <div class="stat-value">{{ user_level_info.total_posts }}</div>
+          <div class="stat-label">게시글</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ user_level_info.total_comments }}</div>
+          <div class="stat-label">댓글</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ user_level_info.total_likes }}</div>
+          <div class="stat-label">받은 추천</div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+<!-- 등급 업 알림 -->
+{% macro level_up_notification(level_info) %}
+  {% if level_info %}
+    <div class="level-up-notification" id="levelUpNotification">
+      <div style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">
+        🎉 축하합니다! 등급이 올랐습니다!
+      </div>
+      <div>
+        Lv.{{ level_info.level }} {{ level_info.level_name }} 달성!
+      </div>
+    </div>
+    
+    <script>
+      setTimeout(function() {
+        const notification = document.getElementById('levelUpNotification');
+        if (notification) {
+          notification.style.animation = 'slideIn 0.3s ease reverse';
+          setTimeout(() => notification.remove(), 300);
+        }
+      }, 3000);
+    </script>
+  {% endif %}
+{% endmacro %}

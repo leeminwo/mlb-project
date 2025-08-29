@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - GPT 커뮤니티</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1 class="login-title">회원가입</h1>
+      <p class="login-subtitle">새로운 계정을 만들어 서비스를 이용하세요</p>
+    </div>
+    
+    <form class="login-form" method="post" action="/register" enctype="application/x-www-form-urlencoded" id="registerForm">
+      <input type="hidden" name="next" value="{{ next or '/' }}">
+      
+      {% if error %}
+      <div class="error-message">
+        {{ error }}
+      </div>
+      {% endif %}
+      
+      <div class="form-group">
+        <label for="user_id" class="form-label">아이디</label>
+        <input id="user_id" name="user_id" type="text" required class="form-input" placeholder="아이디를 입력하세요">
+        <div id="user_id_status" class="status-message"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="nickname" class="form-label">닉네임</label>
+        <input id="nickname" name="nickname" type="text" required class="form-input" placeholder="닉네임 (2자 이상)">
+        <div id="nickname_status" class="status-message"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email" class="form-label">이메일</label>
+        <input id="email" name="email" type="email" class="form-input" placeholder="이메일 주소 (선택사항)">
+        <div id="email_status" class="status-message"></div>
+      </div>
+       
+      <div class="form-group">
+        <label for="password" class="form-label">비밀번호</label>
+        <input id="password" name="password" type="password" required class="form-input" placeholder="영문+숫자+특수문자 포함 6자 이상">
+        <div id="password_rules" class="password-rules">
+          <div class="rule-item" id="rule_length">📏 6자 이상</div>
+          <div class="rule-item" id="rule_letter">🔤 영문 포함</div>
+          <div class="rule-item" id="rule_number">🔢 숫자 포함</div>
+          <div class="rule-item" id="rule_special">✨ 특수문자 포함</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password_confirm" class="form-label">비밀번호 확인</label>
+        <input id="password_confirm" name="password_confirm" type="password" required class="form-input" placeholder="비밀번호를 다시 입력하세요">
+        <div id="password_status" class="status-message"></div>
+      </div>
+
+      <button type="submit" class="login-button" id="submitBtn" disabled>회원가입</button>
+    </form>
+
+    <div class="login-links">
+      <p>이미 계정이 있으신가요? <a href="/login?next={{ next or '/' }}">로그인</a></p>
+    </div>
+  </div>
+
+  <script>
+    let validationState = {
+      user_id: false,
+      nickname: false,
+      password: false
+    };
+
+    // 비밀번호 규칙 검사 함수
+    function validatePassword(password) {
+      const hasLetter = /[a-zA-Z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+      const isLongEnough = password.length >= 6;
+      
+      return {
+        hasLetter,
+        hasNumber,
+        hasSpecial,
+        isLongEnough,
+        isValid: hasLetter && hasNumber && hasSpecial && isLongEnough
+      };
+    }
+
+    // 상태 메시지 표시 함수
+    function showStatus(elementId, message, isError = false) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.className = `status-message ${isError ? 'error' : 'success'}`;
+    }
+
+    // 중복 검사 함수
+    async function checkDuplicate(type, value) {
+      if (!value || value.length < 2) return;
+      
+      try {
+        const response = await fetch(`/check-duplicate?type=${type}&value=${encodeURIComponent(value)}`);
+        const data = await response.json();
+        
+        if (data.available) {
+          showStatus(`${type}_status`, '✅ 사용 가능합니다', false);
+          validationState[type] = true;
+        } else {
+          showStatus(`${type}_status`, '❌ 이미 사용 중입니다', true);
+          validationState[type] = false;
+        }
+      } catch (error) {
+        showStatus(`${type}_status`, '⚠️ 검사 중 오류가 발생했습니다', true);
+        validationState[type] = false;
+      }
+      
+      updateSubmitButton();
+    }
+
+    // 비밀번호 확인 함수
+    function checkPassword() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('password_confirm').value;
+      
+      if (confirm.length === 0) {
+        showStatus('password_status', '', false);
+        validationState.password = false;
+      } else if (password === confirm) {
+        showStatus('password_status', '✅ 비밀번호가 일치합니다', false);
+        validationState.password = true;
+      } else {
+        showStatus('password_status', '❌ 비밀번호가 일치하지 않습니다', true);
+        validationState.password = false;
+      }
+      
+      updateSubmitButton();
+    }
+
+    // 제출 버튼 상태 업데이트
+    function updateSubmitButton() {
+      const submitBtn = document.getElementById('submitBtn');
+      const isValid = Object.values(validationState).every(v => v === true);
+      submitBtn.disabled = !isValid;
+    }
+
+    // 이벤트 리스너 등록
+    document.getElementById('user_id').addEventListener('blur', function() {
+      checkDuplicate('user_id', this.value);
+    });
+
+    document.getElementById('nickname').addEventListener('blur', function() {
+      checkDuplicate('nickname', this.value);
+    });
+
+    document.getElementById('email').addEventListener('blur', function() {
+      if (this.value) {
+        checkDuplicate('email', this.value);
+      } else {
+        showStatus('email_status', '', false);
+        validationState.email = true; // 이메일은 선택사항이므로 빈 값일 때는 통과
+      }
+    });
+
+    // 비밀번호 규칙 실시간 검사
+    document.getElementById('password').addEventListener('input', function() {
+      const password = this.value;
+      const rules = validatePassword(password);
+      
+      // 각 규칙 상태 업데이트
+      document.getElementById('rule_length').className = `rule-item ${rules.isLongEnough ? 'valid' : 'invalid'}`;
+      document.getElementById('rule_letter').className = `rule-item ${rules.hasLetter ? 'valid' : 'invalid'}`;
+      document.getElementById('rule_number').className = `rule-item ${rules.hasNumber ? 'valid' : 'invalid'}`;
+      document.getElementById('rule_special').className = `rule-item ${rules.hasSpecial ? 'valid' : 'invalid'}`;
+      
+      // 비밀번호 확인도 다시 검사
+      checkPassword();
+    });
+
+    document.getElementById('password_confirm').addEventListener('input', checkPassword);
+
+    // 폼 제출 시 최종 검증
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      if (!Object.values(validationState).every(v => v === true)) {
+        e.preventDefault();
+        alert('모든 필드를 올바르게 입력해주세요.');
+      }
+    });
+  </script>
+</body>
+</html>

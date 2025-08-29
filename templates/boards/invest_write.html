@@ -1,0 +1,73 @@
+{# templates/boards/invest_write.html #}
+<link rel="stylesheet" href="/static/css/boards/write.css">
+
+<div class="main-content">
+  <div class="content-box">
+    <div class="write-wrapper">
+      <div class="write-container">
+        <h2>📝 글쓰기</h2>
+
+        {% if error %}
+          <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post"
+              action="{{ request.url_for('invest_write_save') }}"
+              enctype="multipart/form-data">
+
+          <div class="form-group">
+            <label for="category">말머리</label>
+
+            {# 서버에서 tabs(리스트)가 오면 그걸로, 아니면 기본 투자 카테고리로 #}
+            {% set default_tabs = ['비트코인','국내주식','해외주식','종목토론','정보공유','이벤트','공지','잡담'] %}
+            {% set options = tabs if tabs is defined and tabs else default_tabs %}
+
+            <select name="category" id="category" required>
+              <option value="">-- 선택 --</option>
+              {% for tab in options %}
+                <option value="{{ tab }}" {% if category_value == tab %}selected{% endif %}>{{ tab }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title" value="{{ title or '' }}" placeholder="제목을 입력하세요" required>
+          </div>
+
+          <div class="form-group">
+            <label for="content">내용</label>
+            <textarea name="content" id="content" rows="12" placeholder="내용을 입력하세요" required>{{ content or '' }}</textarea>
+          </div>
+
+          {# 일반 사용자는 작성자 필드를 숨기고 닉네임을 자동으로 사용 #}
+          {% if current_user and not current_user.is_admin %}
+            <input type="hidden" name="author" value="{{ current_user.nickname or current_user.name }}">
+            <div class="form-group">
+              <label>작성자</label>
+              <div class="author-display">
+                <span class="author-text">{{ current_user.nickname or current_user.name }}</span>
+                <small class="author-note">(로그인한 사용자)</small>
+              </div>
+            </div>
+          {% else %}
+            {# 어드민은 작성자를 직접 입력할 수 있음 #}
+            <div class="form-group">
+              <label for="author">작성자</label>
+              <input type="text" name="author" value="{{ author or '' }}" placeholder="닉네임을 입력하세요" required>
+            </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label for="files">파일 첨부</label>
+            <input type="file" name="files" multiple>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit">작성 완료</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

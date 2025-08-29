@@ -1,0 +1,137 @@
+/* 글쓰기 영역 래퍼 */
+.write-wrapper {
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+}
+
+/* 글쓰기 메인 컨테이너 */
+.write-container {
+  width: 963px;              /* 고정 */
+  max-width: 963px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px 24px;        /* ✅ 여백 줄임 (기존 30px 40px → 20px 24px) */
+  border-radius: 8px;        /* 조금 더 컴팩트 */
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  font-family: 'Apple SD Gothic Neo', sans-serif;
+  box-sizing: border-box;    /* ✅ padding 포함해서 width 유지 */
+}
+
+/* 제목 */
+.write-container h2 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  border-bottom: 2px solid #e5e5e5;
+  padding-bottom: 12px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* 공통 form group */
+.write-container .form-group {
+  margin-bottom: 20px;
+}
+
+/* 라벨 */
+.write-container label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+/* input, select, textarea */
+.write-container input[type="text"],
+.write-container select,
+.write-container textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background: #fafafa;
+}
+
+/* 포커스 효과 */
+.write-container input:focus,
+.write-container textarea:focus,
+.write-container select:focus {
+  border-color: #3a8bfd;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(58, 139, 253, 0.15);
+  outline: none;
+}
+
+/* textarea 세부 */
+.write-container textarea {
+  resize: vertical;
+  line-height: 1.6;
+  min-height: 160px;
+}
+
+/* 에러 메시지 */
+.write-container .error {
+  background-color: #ffe0e0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #c00;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #f5b5b5;
+}
+
+/* 하단 버튼 영역 */
+.write-container .form-footer {
+  text-align: right;
+}
+
+/* 버튼 */
+.write-container button[type="submit"] {
+  background: linear-gradient(135deg, #3a8bfd, #1e6fe1);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.1s ease;
+}
+
+/* 버튼 hover */
+.write-container button[type="submit"]:hover {
+  background: linear-gradient(135deg, #4b97ff, #2c7ef0);
+  transform: translateY(-1px);
+}
+
+.author-display {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.author-text {
+  font-weight: 600;
+  color: #495057;
+}
+
+.author-note {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* 어드민 작성자 입력 필드 스타일 */
+.form-help {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  display: block;
+}

@@ -1,0 +1,116 @@
+/* 베스트 게시판: 라인 스타일 리스트 */
+.best-posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.best-posts li {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #222;
+  border-bottom: 1px solid #eee;
+  padding: 6px 0;
+  transition: background-color 0.2s ease;
+}
+
+.best-posts li:hover {
+  background-color: #f7f9fc;
+  cursor: pointer;
+}
+
+/* 정렬 번호 or 추천수 (왼쪽) */
+.best-posts .post-rank {
+  display: inline-block;
+  width: 40px;
+  text-align: right;
+  color: #888;
+  font-size: 0.85rem;
+  margin-right: 10px;
+}
+
+/* 카테고리 */
+.best-posts .post-category {
+  color: #1a73e8;
+  font-weight: bold;
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+/* 제목 */
+.best-posts .post-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 댓글 수 */
+.best-posts .post-comments {
+  color: #3367d6;
+  font-weight: bold;
+  margin-left: 8px;
+  font-size: 0.85rem;
+}
+/* 내부 게시판 탭 바 */
+.sub-tabs-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.sub-tabs-left {
+  display: flex;
+  gap: 8px;
+}
+
+.sub-tab {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sub-tab:hover {
+  background: #f0f0f0;
+}
+
+.sub-tab.active {
+  border-color: #2c4491;
+  color: #2c4491;
+  font-weight: bold;
+  box-shadow: inset 0 0 0 2px rgba(44, 68, 145, 0.2);
+}
+
+/* 오른쪽 보기 전환 버튼 */
+.sub-tabs-right {
+  display: flex;
+  gap: 4px;
+}
+
+.view-btn {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.view-btn.active {
+  background: #2c4491;
+  color: white;
+  border-color: #2c4491;
+}

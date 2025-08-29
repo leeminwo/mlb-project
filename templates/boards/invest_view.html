@@ -1,0 +1,307 @@
+<link rel="stylesheet" href="/static/css/boards/view.css">
+<link rel="stylesheet" href="/static/css/boards/comments.css">
+<link rel="stylesheet" href="/static/css/level_system.css">
+
+<div class="post-view">
+  <!-- [본문] 한 박스 -->
+  <div class="card post-card">
+
+    <!-- 제목 + 메타 (제목 아래만 선) -->
+    <div class="header">
+      <h1 class="post-title">{{ post.title }}</h1>
+      <div class="post-meta">
+        <span>작성자: 
+          <span class="level-badge level-{{ post.level }}" style="font-size: 11px; padding: 2px 6px; margin-right: 6px;">
+            Lv.{{ post.level }}
+          </span>
+          {{ post.author }}
+        </span>
+        <span>작성일 {{ post.created_at_fmt }}</span>
+        {% if post.updated_at_fmt and post.updated_at_fmt != post.created_at_fmt %}
+          <span>수정일 {{ post.updated_at_fmt }}</span>
+        {% endif %}
+        <span>조회 {{ post.views }}</span>
+        <span>추천 {{ post.likes }}</span>
+        <span>카테고리: {{ post.category if post.category else '미지정' }}</span>
+      </div>
+    </div>
+
+    <!-- 본문 -->
+    <div class="body">
+      <div class="content">{{ post.content | safe }}</div>
+    </div>
+
+    <!-- 툴바: 작성자/관리자일 때만 렌더 -->
+    {% if current_user and (current_user.is_admin or current_user.id == post.user_id) %}
+    <div class="toolbar">
+      <div class="post-actions">
+        <a href="/invest/edit/{{ post.id }}" class="btn btn--sm">수정</a>
+        <form method="post" action="/invest/delete/{{ post.id }}" style="display:inline"
+              onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="btn btn--danger btn--sm">삭제</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- 히트/폭망 투표 -->
+    <div class="votebar">
+      <div class="vote-info">
+        <!-- 현재 포인트 박스 제거 -->
+      </div>
+      <div class="vote-buttons">
+        <button class="vote vote--hit" id="hitButton" onclick="votePost('hit')" {% if not current_user %}disabled{% endif %}>
+          🎯 히트 <span class="count" id="hitCount">{{ post.likes or 0 }}</span>
+        </button>
+        <button class="vote vote--bomb" id="bombButton" onclick="votePost('bomb')" {% if not current_user %}disabled{% endif %}>
+          💣 폭망 <span class="count" id="bombCount">{{ post.dislikes or 0 }}</span>
+        </button>
+
+        <!-- 포인트 부족 안내 문구는 기본 숨김 처리 -->
+        <p id="point-warning" class="point-warning" hidden>
+          포인트가 부족합니다. (필요: 5, 보유: {{ current_user.points if current_user else 0 }})
+        </p>
+      </div>
+    </div>
+
+    <!-- 공유 / 네비 (목록으로만 유지) -->
+    <div class="share-nav">
+      <div class="sharebar">
+        <a class="mini" href="#" onclick="navigator.clipboard.writeText(location.href);return false;">복사</a>
+        <a class="mini" href="/report/{{ post.id }}">신고</a>
+      </div>
+      <div class="navline">
+        <a class="nav" href="/invest?page={{ page }}">목록으로</a>
+        {% if prev_id %}<a class="nav" href="/invest/view/{{ prev_id }}">이전 글 &lt;</a>{% endif %}
+        {% if next_id %}<a class="nav" href="/invest/view/{{ next_id }}">&gt; 다음 글</a>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- [댓글] 별도 박스 (아바타 제거) -->
+  <div class="card comments">
+    <h3>댓글</h3>
+
+    {% if comments and comments|length > 0 %}
+      <div class="comment-list">
+        {% for c in comments %}
+          <div class="comment" data-comment-id="{{ c.id }}">
+            <div class="comment-header">
+              <div class="meta">
+                <span class="author">{{ c.author }}</span>
+                <span class="kst">{{ c.created_at_fmt }}</span>
+                {% if c.updated_at_fmt and c.updated_at_fmt != c.created_at_fmt %}
+                  <span class="edited">(수정됨)</span>
+                {% endif %}
+              </div>
+              {% if current_user and (current_user.is_admin or current_user.nickname == c.author) %}
+              <div class="comment-actions">
+                <button class="btn btn--sm btn--edit" onclick="editComment('{{ c.id }}')" data-comment-id="{{ c.id }}">수정</button>
+                <form method="post" action="/invest/comment/{{ post.id }}/delete/{{ c.id }}" 
+                      style="display:inline" onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+                  <button type="submit" class="btn btn--sm btn--danger">삭제</button>
+                </form>
+              </div>
+              {% endif %}
+            </div>
+            <div class="body" id="comment-content-{{ c.id }}">{{ c.content | safe }}</div>
+            <div class="edit-form" id="edit-form-{{ c.id }}" style="display: none;">
+              <form method="post" action="/invest/comment/{{ post.id }}/edit/{{ c.id }}">
+                <textarea name="content" required>{{ c.content }}</textarea>
+                <div class="edit-actions">
+                  <button type="submit" class="btn btn--sm btn--primary">저장</button>
+                  <button type="button" class="btn btn--sm" onclick="cancelEdit('{{ c.id }}')" data-comment-id="{{ c.id }}">취소</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">아직 댓글이 없습니다.</p>
+    {% endif %}
+
+    <div class="comment-box">
+      <div class="input">
+        <form method="post" action="/invest/comment/{{ post.id }}"
+              class="comment-form {% if not current_user %}comment-form--disabled{% endif %}">
+          <textarea name="content"
+            placeholder="{% if current_user %}댓글을 입력하세요{% else %}댓글 작성 하시려면 로그인 해주세요{% endif %}"
+            required {% if not current_user %}disabled{% endif %}></textarea>
+          <div class="comment-actions">
+            <button type="submit" class="btn btn--primary btn--sm" {% if not current_user %}disabled{% endif %}>
+              댓글 등록
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function editComment(commentId) {
+  // 댓글 내용과 수정 폼을 토글
+  const contentId = `comment-content-${commentId}`;
+  const formId = `edit-form-${commentId}`;
+  
+  document.getElementById(contentId).style.display = 'none';
+  document.getElementById(formId).style.display = 'block';
+}
+
+function cancelEdit(commentId) {
+  // 수정 폼을 숨기고 댓글 내용을 다시 표시
+  const contentId = `comment-content-${commentId}`;
+  const formId = `edit-form-${commentId}`;
+  
+  document.getElementById(contentId).style.display = 'block';
+  document.getElementById(formId).style.display = 'none';
+}
+
+// 히트/폭망 투표 기능
+let currentVote = null;
+
+async function votePost(voteType) {
+  {% if not current_user %}
+  alert('투표하려면 로그인이 필요합니다.');
+  return;
+  {% endif %}
+  
+  const hitButton = document.getElementById('hitButton');
+  const bombButton = document.getElementById('bombButton');
+  const hitCount = document.getElementById('hitCount');
+  const bombCount = document.getElementById('bombCount');
+  const pointWarning = document.getElementById('point-warning');
+  
+  // 현재 사용자의 포인트 확인 (헤더에서 가져오기)
+  const headerPoints = document.querySelector('.auth-user .user-points');
+  if (!headerPoints) {
+    alert('포인트 정보를 가져올 수 없습니다.');
+    return;
+  }
+  
+  const currentPoints = parseInt(headerPoints.textContent.replace('💰 ', ''), 10);
+  
+  // 포인트 부족 시 안내 문구 표시
+  if (currentPoints < 5) {
+    pointWarning.hidden = false;
+    return;
+  } else {
+    // 포인트가 충분하면 안내 문구 숨김
+    pointWarning.hidden = true;
+  }
+  
+  try {
+    const formData = new FormData();
+    formData.append('post_id', '{{ post.id }}');
+    formData.append('vote_type', voteType);
+    
+    const response = await fetch('/vote', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      if (data.action === 'voted') {
+        // 새로 투표한 경우
+        if (voteType === 'hit') {
+          hitCount.textContent = parseInt(hitCount.textContent) + 1;
+          currentVote = 'hit';
+        } else {
+          bombCount.textContent = parseInt(bombCount.textContent) + 1;
+          currentVote = 'bomb';
+        }
+        
+        // 헤더의 포인트 업데이트
+        headerPoints.textContent = `💰 ${currentPoints - 5}`;
+        
+        // 버튼 상태 업데이트
+        updateButtonStates();
+        
+        alert(data.message);
+      } else if (data.action === 'cancelled') {
+        // 투표 취소한 경우
+        if (voteType === 'hit') {
+          hitCount.textContent = parseInt(hitCount.textContent) - 1;
+        } else {
+          bombCount.textContent = parseInt(bombCount.textContent) - 1;
+        }
+        
+        // 헤더의 포인트 업데이트
+        headerPoints.textContent = `💰 ${currentPoints + 5}`;
+        
+        currentVote = null;
+        updateButtonStates();
+        
+        alert(data.message);
+      }
+    } else {
+      alert(data.detail || '투표 처리 중 오류가 발생했습니다.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('투표 처리 중 오류가 발생했습니다.');
+  }
+}
+
+function updateButtonStates() {
+  const hitButton = document.getElementById('hitButton');
+  const bombButton = document.getElementById('bombButton');
+  const userPoints = document.getElementById('userPoints');
+  const currentPoints = parseInt(userPoints.textContent);
+  
+  // 포인트 부족 시 버튼 비활성화
+  if (currentPoints < 5) {
+    hitButton.disabled = true;
+    bombButton.disabled = true;
+  } else {
+    hitButton.disabled = false;
+    bombButton.disabled = false;
+  }
+  
+  // 현재 투표 상태에 따른 버튼 스타일
+  if (currentVote === 'hit') {
+    hitButton.classList.add('voted');
+    bombButton.classList.remove('voted');
+  } else if (currentVote === 'bomb') {
+    bombButton.classList.add('voted');
+    hitButton.classList.remove('voted');
+  } else {
+    hitButton.classList.remove('voted');
+    bombButton.classList.remove('voted');
+  }
+}
+
+// 페이지 로드 시 투표 상태 확인
+async function checkVoteStatus() {
+  try {
+    const response = await fetch(`/vote-status/{{ post.id }}`);
+    const data = await response.json();
+    
+    if (data.voted) {
+      currentVote = data.vote_type;
+    }
+    
+    // 카운트 업데이트
+    document.getElementById('hitCount').textContent = data.likes_count;
+    document.getElementById('bombCount').textContent = data.dislikes_count;
+    
+    // 포인트 확인
+    if (data.can_vote === false) {
+      document.getElementById('hitButton').disabled = true;
+      document.getElementById('bombButton').disabled = true;
+    }
+    
+    updateButtonStates();
+  } catch (error) {
+    console.error('Error checking vote status:', error);
+  }
+}
+
+// 페이지 로드 시 실행
+document.addEventListener('DOMContentLoaded', function() {
+  checkVoteStatus();
+});
+</script>

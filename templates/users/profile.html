@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}{{ current_user.nickname }}님의 프로필{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/level_system.css">
+<style>
+  .profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-header {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .profile-details h1 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .profile-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  
+  .btn-edit {
+    background: #2196f3;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s ease;
+  }
+  
+  .btn-edit:hover {
+    background: #1976d2;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "components/level_badge.html" import level_card, level_badge %}
+
+<div class="profile-container">
+  <!-- 프로필 헤더 -->
+  <div class="profile-header">
+    <div class="profile-info">
+      <div class="profile-avatar">
+        {{ current_user.nickname[0] }}
+      </div>
+      <div class="profile-details">
+        <h1>{{ current_user.nickname }}</h1>
+        {{ level_badge(level_info, 'normal') }}
+        <div class="profile-meta">
+          <span>📧 {{ current_user.email }}</span>
+          <span>👤 {{ current_user.name }}</span>
+          <span>📅 가입일: {{ current_user.joined_at.strftime('%Y.%m.%d') if current_user.joined_at else '알 수 없음' }}</span>
+          <span>💰 포인트: {{ user_points }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="profile-actions">
+      <a href="/settings" class="btn-edit">설정</a>
+    </div>
+  </div>
+  
+  <!-- 등급 정보 카드 -->
+  {{ level_card(level_info) }}
+  
+  <!-- 활동 내역 (추후 구현) -->
+  <div class="level-card">
+    <h3>📊 활동 내역</h3>
+    <p style="color: #666; text-align: center;">추후 활동 내역이 여기에 표시됩니다.</p>
+  </div>
+</div>
+{% endblock %}

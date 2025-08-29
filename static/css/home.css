@@ -1,0 +1,257 @@
+/* 1. 전역 레이아웃 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+}
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;  /* 좌우 여백 */
+}
+
+.container {
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+}
+
+/* 2. 헤더 배너 */
+.header-banner {
+    padding: 0;
+    margin: 0;
+}
+
+.header-banner img {
+    max-width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+/* 3. 탭 메뉴 */
+.tabs-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, #6c90d6, #587ec5);
+    padding: 0.5rem 1rem;
+}
+
+.tabs-left {
+    display: flex;
+    gap: 0;
+}
+
+.tabs-left a,
+.tabs-right a {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 0.8rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    border-right: 1px solid rgba(255,255,255,0.3);
+    transition: background-color 0.2s ease;
+}
+
+.tabs-left a:last-child,
+.tabs-right a {
+    border-right: none;
+}
+
+.tabs-right a {
+    margin-left: 1rem;
+}
+
+.tabs-left a.active,
+.tabs-right a.active {
+    color: yellow;
+    background-color: #2c4491;
+    border-radius: 4px;
+}
+
+/* 4. 왼쪽 사이드바 */
+.sidebar {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-box input {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-box input:focus {
+    border-color: #587ec5;
+    box-shadow: 0 0 4px rgba(88, 126, 197, 0.3);
+}
+
+.event-box {
+    background-color: #fdfdfd;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.nav-style .nav-title {
+    font-weight: 700;
+    color: #009688;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    padding-left: 0.3rem;
+    border-left: 4px solid #009688;
+}
+
+.nav-style ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.nav-style li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.2rem;
+    padding-left: 0.4rem;
+    font-size: 0.92rem;
+    color: #333;
+    transition: background-color 0.2s ease;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-style li:hover {
+    background-color: #f0f8ff;
+}
+
+.nav-style .icon {
+    font-size: 1rem;
+    width: 1.3rem;
+    text-align: center;
+    opacity: 0.85;
+}
+
+/* 5. 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    padding: 0;
+    min-width: 963px;   /* ✅ 투자 게시판과 동일한 기준으로 통일 */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-sizing: border-box;
+}
+
+/* 6. 상단 바(세션 인지형 헤더) */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;   /* 배너와 동일한 폭 */
+  margin: 0 auto;      /* 가운데 정렬 */
+  padding: 6px 15px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.top-left {
+  color: #444;
+  white-space: nowrap;
+}
+
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;           /* 살짝 컴팩트하게 */
+  flex-wrap: wrap;     /* 좁은 화면에서 줄바꿈 허용 */
+}
+
+/* (기존 로그인 폼은 제거/미사용) */
+.login-form { display: none; }
+
+/* 검색 폼 */
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.search-form input {
+  padding: 6px 8px;
+  font-size: 13px;
+  width: 220px;        /* 고정 폭 */
+  box-sizing: border-box;
+}
+.search-form button {
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 비로그인: 링크 영역 */
+.auth-links a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+}
+.auth-links a:hover { text-decoration: underline; }
+.divider { color: #aaa; margin: 0 4px; }
+
+/* 로그인 상태: 유저 영역 */
+.auth-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.auth-user .hello { color: #333; }
+.auth-user .link {
+  color: #2c4491;
+  text-decoration: none;
+  font-weight: 600;
+}
+.auth-user .link:hover { text-decoration: underline; }
+
+/* 로그아웃 버튼 */
+.logout-form { display: inline; margin: 0; }
+.btn-logout {
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-logout:hover {
+  background: #fafafa;
+  border-color: #bbb;
+}
+

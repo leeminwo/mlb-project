@@ -1,0 +1,11 @@
+.auth-user .user-points {
+  display: inline-block;
+  margin-left: 12px;
+  font-size: 0.9em;
+  color: #f39c12;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: rgba(243, 156, 18, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}

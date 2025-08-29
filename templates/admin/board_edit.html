@@ -1,0 +1,32 @@
+{% extends "admin/base_admin.html" %}
+{% block page_title %}{{ board_label }} 글 수정{% endblock %}
+{% block content %}
+<div class="admin-card" style="max-width:720px;">
+  <h3 style="margin-bottom:16px;">글 수정</h3>
+  <form method="post">
+    <div style="margin-bottom:12px;">
+      <label>카테고리</label>
+      <select name="category" required>
+        {% for tab in (tabs if tabs is defined else []) %}
+          <option value="{{ tab }}" {{ 'selected' if post.category == tab else '' }}>{{ tab }}</option>
+        {% endfor %}
+        {% if (tabs is not defined) or (tabs|length == 0) %}
+          <option value="{{ post.category }}" selected>{{ post.category }}</option>
+        {% endif %}
+      </select>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label>제목</label>
+      <input name="title" value="{{ post.title }}" style="width:100%;" required>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label>내용</label>
+      <textarea name="content" rows="12" style="width:100%;" required>{{ post.content }}</textarea>
+    </div>
+    <div style="text-align:right;">
+      <button class="btn" type="submit">저장</button>
+      <a class="btn btn--danger" href="/admin/posts/{{ board }}">취소</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

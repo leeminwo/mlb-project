@@ -1,0 +1,75 @@
+{% extends "admin/base_admin.html" %}
+{% block page_title %}{{ board_label }} 게시판 관리{% endblock %}
+
+{% block content %}
+<div class="admin-card" style="width:100%;">
+  <h2 style="margin-bottom:16px;">{{ board_label }} 게시판</h2>
+
+  {% if tabs %}
+  <div class="category-tabs" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+    {% for tab in tabs %}
+      <a href="{{ request.url_for('admin_board_list', board=board) }}?category={{ tab | urlencode }}"
+         class="btn btn--pill {{ 'is-active' if active_tab == tab else '' }}"
+         style="text-decoration:none;">
+        {{ tab }}
+      </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th style="width:90px;">구분</th>
+        <th>제목</th>
+        <th style="width:120px;">글쓴이</th>
+        <th style="width:170px; text-align:center;">시간</th>
+        <th style="width:90px; text-align:center;">조회</th>
+        <th style="width:90px; text-align:center;">추천</th>
+        {% if admin_mode %}<th style="width:160px; text-align:center;">관리</th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% if posts %}
+        {% for p in posts %}
+        <tr>
+          <td>{{ p.category or '-' }}</td>
+          <td>
+            <a href="{{ request.url_for('user_board_view', board=board, post_id=p.id) }}"
+               target="_blank" style="text-decoration:none; color:#9ad;">
+              {{ p.title }}
+            </a>
+          </td>
+          <td>{{ p.author }}</td>
+          <td style="text-align:center;">
+            {{ p.created_at_fmt or (p.created_at[:16] if p.created_at else '') }}
+            {% if p.updated_at_fmt %}
+              <span class="badge badge--muted" style="margin-left:6px;">수정됨</span>
+            {% endif %}
+          </td>
+          <td style="text-align:center;">{{ p.views }}</td>
+          <td style="text-align:center;">{{ p.likes }}</td>
+          {% if admin_mode %}
+          <td style="text-align:center;">
+            <a class="btn btn--sm"
+               href="{{ request.url_for('admin_board_edit_form', board=board, post_id=p.id) }}">수정</a>
+            <form method="post"
+                  action="{{ request.url_for('admin_board_delete', board=board, post_id=p.id) }}"
+                  style="display:inline;" onsubmit="return confirm('정말 삭제하시겠어요?');">
+              <button type="submit" class="btn btn--sm btn--danger">삭제</button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="{{ 6 + (1 if admin_mode else 0) }}">게시물이 없습니다.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div style="margin-top:16px; text-align:right;">
+    <a class="btn" href="/admin/posts/invest/write" target="_blank">글쓰기</a>
+  </div>
+</div>
+{% endblock %}

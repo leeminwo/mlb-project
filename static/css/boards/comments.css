@@ -1,0 +1,379 @@
+/* 댓글 전용 CSS - 하얀색 기반 깔끔한 디자인 */
+
+/* 댓글 섹션 전체 */
+.comments {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1px solid #f0f0f0;
+}
+
+/* 댓글 제목 */
+.comments h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e8f4fd;
+  position: relative;
+}
+
+.comments h3::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #3498db, #5dade2);
+  border-radius: 1px;
+}
+
+/* 댓글 목록 */
+.comment-list {
+  margin-bottom: 2rem;
+}
+
+/* 개별 댓글 */
+.comment {
+  background: #ffffff;
+  border: 1px solid #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.comment:hover {
+  border-color: #e3f2fd;
+  box-shadow: 0 2px 12px rgba(52, 152, 219, 0.1);
+  transform: translateY(-1px);
+}
+
+.comment:last-child {
+  margin-bottom: 0;
+}
+
+/* 댓글 헤더 (작성자 + 액션 버튼) */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+/* 댓글 메타 정보 */
+.comment .meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.comment .author {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #3498db, #5dade2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.comment .kst {
+  color: #95a5a6;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.comment .edited {
+  color: #e74c3c;
+  font-style: italic;
+  font-size: 0.8rem;
+  background: #fdf2f2;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* 댓글 액션 버튼 */
+.comment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comment-actions .btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.comment-actions .btn--edit {
+  background: linear-gradient(135deg, #3498db, #5dade2);
+  color: white;
+}
+
+.comment-actions .btn--edit:hover {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.comment-actions .btn--danger {
+  background: linear-gradient(135deg, #e74c3c, #ec7063);
+  color: white;
+}
+
+.comment-actions .btn--danger:hover {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+/* 댓글 본문 */
+.comment .body {
+  color: #34495e;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* 댓글 수정 폼 */
+.edit-form {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  resize: vertical;
+  margin-bottom: 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: #ffffff;
+  color: #495057;
+  transition: border-color 0.2s ease;
+}
+
+.edit-form textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.edit-actions .btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-actions .btn--primary {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+}
+
+.edit-actions .btn--primary:hover {
+  background: linear-gradient(135deg, #229954, #27ae60);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.edit-actions .btn:not(.btn--primary) {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.edit-actions .btn:not(.btn--primary):hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+/* 댓글 입력 박스 */
+.comment-box {
+  background: #ffffff;
+  border-top: 2px solid #f8f9fa;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.comment-box .input {
+  width: 100%;
+}
+
+/* 댓글 입력 폼 */
+.comment-form textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  resize: vertical;
+  margin-bottom: 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: #ffffff;
+  color: #495057;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1), 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.comment-form textarea::placeholder {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+/* 댓글 등록 버튼 */
+.comment-form .comment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comment-form .btn--primary {
+  background: linear-gradient(135deg, #3498db, #5dade2);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.comment-form .btn--primary:hover {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+}
+
+.comment-form .btn--primary:active {
+  transform: translateY(0);
+}
+
+/* 비활성화된 댓글 폼 */
+.comment-form--disabled textarea {
+  background-color: #f8f9fa;
+  color: #adb5bd;
+  cursor: not-allowed;
+  border-color: #e9ecef;
+  box-shadow: none;
+}
+
+.comment-form--disabled textarea:focus {
+  border-color: #e9ecef;
+  box-shadow: none;
+  transform: none;
+}
+
+.comment-form--disabled .btn--primary {
+  background: #e9ecef;
+  color: #adb5bd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.comment-form--disabled .btn--primary:hover {
+  background: #e9ecef;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 댓글이 없을 때 메시지 */
+.comment-list:empty::after {
+  content: "아직 댓글이 없습니다.";
+  display: block;
+  text-align: center;
+  color: #95a5a6;
+  font-style: italic;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #dee2e6;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .comments {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .comment {
+    padding: 1rem;
+  }
+  
+  .comment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .comment-actions {
+    align-self: flex-end;
+  }
+  
+  .edit-actions {
+    flex-direction: column;
+  }
+  
+  .edit-actions .btn {
+    width: 100%;
+  }
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.comment {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.comment:nth-child(1) { animation-delay: 0.1s; }
+.comment:nth-child(2) { animation-delay: 0.2s; }
+.comment:nth-child(3) { animation-delay: 0.3s; }
+.comment:nth-child(4) { animation-delay: 0.4s; }
+.comment:nth-child(5) { animation-delay: 0.5s; }

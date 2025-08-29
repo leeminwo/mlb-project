@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 - GPT 커뮤니티</title>
+  <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1 class="login-title">로그인</h1>
+      <p class="login-subtitle">계정에 로그인하여 서비스를 이용하세요</p>
+    </div>
+    
+         <form class="login-form" method="post" action="/login" enctype="application/x-www-form-urlencoded">
+       <div class="form-group">
+         <label for="user_id" class="form-label">아이디</label>
+         <input id="user_id" name="user_id" type="text" required class="form-input" placeholder="아이디를 입력하세요">
+       </div>
+       
+       <div class="form-group">
+         <label for="password" class="form-label">비밀번호</label>
+         <input id="password" name="password" type="password" required class="form-input" placeholder="비밀번호를 입력하세요">
+       </div>
+
+      <div class="form-options">
+        <div class="checkbox-group">
+          <input id="remember-me" name="remember-me" type="checkbox" class="checkbox-input">
+          <label for="remember-me" class="checkbox-label">로그인 상태 유지</label>
+        </div>
+        <a href="/forgot-password" class="forgot-link">비밀번호를 잊으셨나요?</a>
+      </div>
+
+      <button type="submit" class="login-button">로그인</button>
+    </form>
+
+    <div class="login-links">
+      <p>계정이 없으신가요? <a href="/register">회원가입</a></p>
+    </div>
+  </div>
+</body>
+</html>

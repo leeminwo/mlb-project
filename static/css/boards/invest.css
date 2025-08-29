@@ -1,0 +1,486 @@
+/* 투자 게시판 전용 CSS */
+/* 참고: Bloomberg, Reuters, Yahoo Finance 등의 디자인 */
+
+/* --- Base theme --- */
+:root {
+  --primary-blue: #0066cc;
+  --secondary-blue: #0052cc;
+  --success-green: #00875a;
+  --warning-orange: #ff8b00;
+  --danger-red: #de350b;
+  --neutral-gray: #6b778c;
+  --light-gray: #f4f5f7;
+  --border-gray: #dfe1e6;
+  --text-dark: #172b4d;
+  --text-muted: #5e6c84;
+  --white: #ffffff;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Main Container --- */
+.board-container {
+  flex: 1;
+  width: auto;
+  min-width: 963px;
+  background: var(--white);
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+/* --- Board Title --- */
+.board-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: var(--text-dark);
+  text-align: center;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.board-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+  border-radius: 2px;
+}
+
+/* --- Category Tabs --- */
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--white);
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn {
+  padding: 10px 18px;
+  border: 1px solid var(--border-gray);
+  border-radius: 6px;
+  background: var(--white);
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-btn:hover {
+  background: rgba(0, 102, 204, 0.05);
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
+}
+
+.tab-btn.active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+/* --- Board Table --- */
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border: 1px solid var(--border-gray);
+  background: var(--white);
+}
+
+.board-table thead {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.board-table th {
+  padding: 12px 8px;
+  border: none;
+  text-align: left;
+  color: var(--text-dark);
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.board-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border-gray);
+  text-align: left;
+  color: var(--text-dark);
+  vertical-align: middle;
+}
+
+.board-table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.board-table td.text-center {
+  text-align: center;
+}
+
+/* --- Notice Row --- */
+.notice-row {
+  background-color: #fffbf0;
+  border-left: 3px solid var(--warning-orange);
+}
+
+.notice-row:hover {
+  background-color: #fff7e6;
+}
+
+/* --- Category Badges --- */
+.category-korea,
+.category-global,
+.category-bitcoin {
+  display: inline-block;
+  padding: 4px 0;
+  background: transparent !important;
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 12px;
+  border: none !important;
+  text-transform: none;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  min-width: 60px;
+}
+
+.category-korea {
+  color: var(--danger-red);
+}
+
+.category-global {
+  color: var(--success-green);
+}
+
+.category-bitcoin {
+  color: var(--warning-orange);
+}
+
+
+
+/* --- Post Title Link --- */
+.post-title-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+  line-height: 1.4;
+}
+
+.post-title-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+/* --- Write Button --- */
+.write-btn-wrapper {
+  margin-top: 28px;
+  text-align: right;
+}
+
+.write-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: none;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.write-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.write-button:hover:before {
+  left: 100%;
+}
+
+.write-button:hover {
+  background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+  color: var(--white);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+}
+
+.write-button:after {
+  content: "📝";
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Table Column Widths --- */
+.col-small {
+  width: 60px;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.col-title {
+  width: auto;
+}
+
+.post-title-cell {
+  max-width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.board-table th.category-col,
+.board-table th.title-col,
+.board-table th.time-col {
+  text-align: center;
+}
+
+.board-table td.category-cell {
+  min-width: 120px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.board-table td.post-title-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.board-table td.post-title-cell .post-title-link {
+  text-align: left;
+  display: block;
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+.board-table td.time-cell {
+  min-width: 160px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* 글쓴이 셀: 닉네임과 레벨 배지 한 줄 정렬 */
+.board-table td.author-cell {
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 8px 12px;
+}
+
+.author-name {
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-right: 6px;
+  color: var(--text-dark);
+}
+
+.board-table td.author-cell .level-badge {
+  display: inline-block;
+  font-size: 0.8em;
+  line-height: 1.2;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: #e9f2ff;
+  color: #1f6fff;
+  vertical-align: middle;
+  margin-left: 4px;
+  font-weight: 500;
+  border: 1px solid #d1e7ff;
+}
+
+.board-table td.author-cell .points-badge {
+  display: inline-block;
+  font-size: 0.75em;
+  line-height: 1.2;
+  padding: 2px 4px;
+  border-radius: 8px;
+  background: #fff3cd;
+  color: #856404;
+  vertical-align: middle;
+  margin-left: 4px;
+  font-weight: 500;
+  border: 1px solid #ffeaa7;
+}
+
+/* 다크모드 대비 */
+@media (prefers-color-scheme: dark) {
+  .board-table td.author-cell .level-badge {
+    background: #1a2a46;
+    color: #7ea8ff;
+    border-color: #2d4a6b;
+  }
+}
+
+/* 모바일: 줄바꿈 허용(배지 세컨더리) */
+@media (max-width: 375px) {
+  .board-table td.author-cell { 
+    white-space: normal; 
+  }
+  .board-table td.author-cell .level-badge { 
+    margin-left: 4px; 
+    display: block;
+    margin-top: 2px;
+  }
+  .author-name {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 2px;
+  }
+}
+
+/* --- Stats Badges --- */
+.views-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  background: var(--light-gray);
+  color: var(--text-muted);
+  font-size: 11px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.likes-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  background: var(--success-green);
+  color: var(--white);
+  font-size: 11px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+}
+
+.empty-state p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .board-container {
+    min-width: auto;
+    padding: 16px;
+  }
+  
+  .board-title {
+    font-size: 24px;
+  }
+  
+  .category-tabs {
+    gap: 4px;
+    padding: 10px;
+  }
+  
+  .tab-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .board-table {
+    font-size: 12px;
+  }
+  
+  .board-table th,
+  .board-table td {
+    padding: 10px 6px;
+  }
+  
+  .col-small {
+    width: 60px;
+  }
+  
+  .post-title-cell {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .board-container {
+    padding: 12px;
+  }
+  
+  .category-tabs {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .tab-btn {
+    text-align: center;
+  }
+  
+  .board-table thead {
+    display: none;
+  }
+  
+  .board-table tbody tr {
+    display: block;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    padding: 10px;
+  }
+  
+  .board-table tbody td {
+    display: block;
+    text-align: left;
+    border: none;
+    padding: 4px 0;
+  }
+  
+  .write-btn-wrapper {
+    text-align: center;
+  }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 추가</title>
+    <link rel="stylesheet" href="/static/css/admin/popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <h2>👤 사용자 추가</h2>
+        <form method="post" action="/admin/users/create" enctype="multipart/form-data">
+            <input type="hidden" id="id" name="id" value="">
+            
+            <label for="user_id">아이디</label>
+            <input type="text" id="user_id" name="user_id" required>
+
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" name="nickname" required>
+
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" placeholder="선택사항">
+
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="role">역할</label>
+            <select id="role" name="role">
+                <option value="user">일반</option>
+                <option value="admin">관리자</option>
+            </select>
+
+            <label for="status">상태</label>
+            <select id="status" name="status">
+                <option value="active">활성</option>
+                <option value="inactive">비활성</option>
+            </select>
+
+            <label for="level">등급</label>
+            <select id="level" name="level">
+                <option value="1">1 - 새내기</option>
+                <option value="2">2 - 초보자</option>
+                <option value="3">3 - 견습생</option>
+                <option value="4">4 - 수습생</option>
+                <option value="5">5 - 일반인</option>
+                <option value="6">6 - 열성회원</option>
+                <option value="7">7 - 우수회원</option>
+                <option value="8">8 - 전문가</option>
+                <option value="9">9 - 마스터</option>
+                <option value="10">10 - 전설</option>
+            </select>
+
+            <label for="exp">경험치</label>
+            <input type="number" id="exp" name="exp" value="0" min="0">
+
+            <button type="submit" class="btn">등록</button>
+        </form>
+    </div>
+    <script>
+    if (window.location.search.includes("success=true")) {
+        window.opener.location.reload();  // 부모창 새로고침
+        window.close();                   // 팝업 닫기
+    }
+    </script>
+</body>
+</html>

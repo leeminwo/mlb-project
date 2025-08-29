@@ -1,0 +1,76 @@
+<!-- 베스트 게시판 콘텐츠 -->
+<link rel="stylesheet" href="/static/css/boards/invest.css">
+<link rel="stylesheet" href="/static/css/level_system.css">
+
+
+
+<div class="board-container">
+  <h2 class="board-title">베스트 게시판</h2>
+
+  <!-- 📌 상단 탭 (서브 카테고리 필터) -->
+  <div class="category-tabs">
+    {% for tab in ["인기", "공지"] %}
+      <a href="?category={{ tab }}"
+         class="tab-btn {% if request.query_params.get('category') == tab %}active{% endif %}">
+        {{ tab }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- 📌 게시글 리스트 테이블 -->
+  <table class="board-table">
+    <thead>
+      <tr>
+        <th class="col-small category-col">구분</th>
+        <th class="col-title title-col">제목</th>
+        <th class="col-small">글쓴이</th>
+        <th class="col-small time-col">시간</th>
+        <th class="col-small text-center">조회</th>
+        <th class="col-small text-center">추천</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if posts %}
+        {% for post in posts %}
+        <tr class="{% if post.category == '공지' %}notice-row{% endif %}">
+          <td class="category-cell text-center">
+            <span class="category-{{ post.category.lower() }}">
+              {{ post.category }}
+            </span>
+          </td>
+          <td class="post-title-cell">
+            <a href="/trendy/view/{{ post.id }}" class="post-title-link">
+              {{ post.title }}
+            </a>
+          </td>
+          <td class="author-cell">
+            <span class="author-name">{{ post.author }}</span>
+            <span class="level-badge level-{{ post.level }}" aria-label="사용자 레벨">Lv.{{ post.level or 1 }}</span>
+          </td>
+          <td class="time-cell text-center">
+            {{ post.created_at_fmt or (post.created_at[:16] if post.created_at else '') }}
+          </td>
+          <td class="text-center">{{ post.views }}</td>
+          <td class="text-center">{{ post.likes }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+            🚨 게시글이 없습니다! 데이터베이스에서 가져오지 못했습니다!
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <!-- 📌 글쓰기 버튼 -->
+  <div class="write-btn-wrapper">
+    <a href="/trendy/write" class="write-button">글쓰기</a>
+  </div>
+</div>
+
+<style>
+  .badge{display:inline-block;padding:2px 6px;border-radius:8px;font-size:12px;margin-left:6px}
+  .badge--muted{background:#f1f3f5;color:#444}
+</style>

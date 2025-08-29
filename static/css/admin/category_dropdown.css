@@ -1,0 +1,6 @@
+/* C:\Users\MSI\project-a\static\css\admin\category_dropdown.css */
+.category-dropdown{display:flex;flex-direction:column;gap:6px}
+.category-dropdown .toggle{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer}
+.category-dropdown .menu{margin-top:6px;padding:8px;border:1px solid #eee;border-radius:6px;background:#fafafa}
+.category-dropdown .menu a{display:block;padding:6px 8px;text-decoration:none;color:#333;border-radius:4px}
+.category-dropdown .menu a:hover{background:#f0f8ff}

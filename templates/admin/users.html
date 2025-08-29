@@ -1,0 +1,151 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}회원 관리{% endblock %}
+{% block page_title %}회원 관리{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/level_system.css">
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 20px;">
+
+  <!-- 상단 툴바: GET 폼으로 필터/검색 전송 -->
+  <div class="admin-card">
+    <form id="filterForm" method="get" action="/admin/users"
+          style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <!-- 역할 -->
+        <select class="input-select" name="role" onchange="this.form.submit()">
+          <option value="" {{ '' == (role or '') and 'selected' or '' }}>전체 역할</option>
+          <option value="admin" {{ (role or '') == 'admin' and 'selected' or '' }}>관리자</option>
+          <option value="user"  {{ (role or '') == 'user'  and 'selected' or '' }}>일반</option>
+        </select>
+
+        <!-- 2FA -->
+        <select class="input-select" name="tfa" onchange="this.form.submit()">
+          <option value=""  {{ '' == (tfa or '') and 'selected' or '' }}>2FA 전체</option>
+          <option value="1" {{ (tfa or '') == '1' and 'selected' or '' }}>활성</option>
+          <option value="0" {{ (tfa or '') == '0' and 'selected' or '' }}>비활성</option>
+        </select>
+
+        <!-- 검색어 -->
+        <input type="text" class="input-search" name="q" placeholder="이름 또는 이메일 검색"
+               value="{{ q or '' }}" style="min-width:260px">
+        <button class="btn" type="submit">검색</button>
+        <a class="btn" href="/admin/users" style="text-decoration:none;display:inline-block;">초기화</a>
+      </div>
+
+      <div>
+        <!-- ✅ 팝업으로 사용자 추가 -->
+        <button class="btn" type="button" onclick="openCreateUserPopup()">+ 사용자 추가</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 유저 테이블 -->
+  <div class="admin-card" style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead>
+                 <tr>
+           <th>번호</th>
+           <th>아이디</th>
+           <th>이름</th>
+           <th>닉네임</th>
+           <th>이메일</th>
+           <th>등급</th>
+           <th>경험치</th>
+           <th>역할</th>
+           <th>상태</th>
+           <th>가입일</th>
+           <th>2FA</th>
+           <th>마지막 로그인</th>
+           <th>삭제 여부</th>
+           <th>관리</th>
+         </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.user_id or '-' }}</td>
+          <td>{{ user.name or '-' }}</td>
+          <td>{{ user.nickname or '-' }}</td>
+          <td>{{ user.email or '-' }}</td>
+          <td>
+            <span class="badge level-badge level-{{ user.level }}" style="font-size: 11px; padding: 2px 6px;">
+              Lv.{{ user.level }} {{ user.level_name }}
+            </span>
+          </td>
+                     <td>{{ user.exp or 0 }}</td>
+           <td>{{ user.role or '-' }}</td>
+          <td>
+            <span class="badge {% if (user.status or '') == 'active' %}badge-green{% else %}badge-red{% endif %}">
+              {{ (user.status or '-')|capitalize }}
+            </span>
+          </td>
+          <td>
+            {% if user.joined_at %}
+              {{ (user.joined_at|string)[:10] }}
+            {% else %}-{% endif %}
+          </td>
+          <td>
+            {% set tfa = user.two_factor if user.two_factor is not none else (user.twofa if user.twofa is not none else None) %}
+            <span class="badge badge-yellow">
+              {{ '활성' if tfa else '비활성' }}
+            </span>
+          </td>
+          <td>
+            {% if user.last_login %}
+              {{ (user.last_login|string)[:19] }}
+            {% else %}-{% endif %}
+          </td>
+          <td>
+            {% if user.deleted %}
+              <span class="badge badge-red">삭제됨</span>
+            {% else %}
+              <span class="badge badge-green">정상</span>
+            {% endif %}
+          </td>
+          <td style="white-space:nowrap;">
+            <!-- ✅ 팝업으로 수정 -->
+            <button type="button" class="btn btn-small" onclick="openEditUserPopup('{{ user.id }}')">수정</button>
+            <a href="/admin/users/delete/{{ user.id }}" class="btn btn-small btn-danger"
+               onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 페이지네이션(간단 카운트) -->
+  <div class="pagination" style="text-align:right;">
+    <span>{{ users|length }}명</span>
+  </div>
+
+</div>
+
+<!-- ✅ 팝업 오픈 스크립트 -->
+<script>
+function openPopup(url, winName, w, h) {
+  const topOuter = window.top.outerHeight || window.outerHeight || 800;
+  const leftOuter = window.top.outerWidth || window.outerWidth || 1200;
+  const topY = (topOuter / 2) + (window.screenY || window.top.screenY || 0) - (h / 2);
+  const leftX = (leftOuter / 2) + (window.screenX || window.top.screenX || 0) - (w / 2);
+
+  window.open(
+    url,
+    winName,
+    `width=${w},height=${h},left=${leftX},top=${topY},resizable=yes,scrollbars=yes`
+  );
+}
+
+function openCreateUserPopup() {
+  openPopup('/admin/users/create', 'createUser', 520, 720);
+}
+
+function openEditUserPopup(id) {
+  openPopup(`/admin/users/edit/${id}`, `editUser_${id}`, 540, 760);
+}
+</script>
+{% endblock %}

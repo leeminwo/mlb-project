@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="icon" href="{{ url_for('static', path='favicon.ico') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', path='favicon-32.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', path='favicon-16.png') }}">
+  <meta charset="UTF-8">
+  <title>GPT 커뮤니티</title>
+  <link rel="stylesheet" href="/static/css/home.css">
+  <link rel="stylesheet" href="/static/css/tabs.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- 상단 헤더바 -->
+  <div class="top-bar">
+    <div class="top-left">
+      GPT 커뮤니티 - 유머, 게임, 투자, 스포츠 종합 커뮤니티
+    </div>
+
+    <div class="top-right">
+      {% set user = request.session.get('user') %}
+      {% set admin_logged_in = request.session.get('admin_logged_in') %}
+      {% set on_admin = request.url.path.startswith('/admin') %}
+
+      {% if not user %}
+        <!-- 비로그인(유저) -->
+        <div class="auth-links">
+          <a href="/login?next={{ request.url.path }}{% if request.url.query %}%3F{{ request.url.query|urlencode }}{% endif %}">로그인</a>
+          <span class="divider">|</span>
+          <a href="/register?next={{ request.url.path }}{% if request.url.query %}%3F{{ request.url.query|urlencode }}{% endif %}">회원가입</a>
+        </div>
+      {% else %}
+        <!-- 유저 로그인 -->
+        <div class="auth-user">
+          <span class="hello">안녕하세요, <strong>{{ user.nickname }}</strong>님</span>
+          <span class="user-points">💰 {{ user.points or 0 }}</span>
+          {% if user.is_admin %}
+            <a class="link" href="/admin/dashboard">관리자</a>
+          {% endif %}
+          <form class="logout-form" method="post" action="/logout">
+            <!-- 현재 페이지로 복귀 -->
+            <input type="hidden" name="next" value="{{ request.url.path }}{% if request.url.query %}?{{ request.url.query|urlencode }}{% endif %}">
+            <button type="submit" class="btn-logout">로그아웃</button>
+          </form>
+        </div>
+      {% endif %}
+
+      {# 관리자 영역에 있을 때만, 관리자 플래그 전용 UI 추가 #}
+      {% if on_admin and admin_logged_in %}
+        <div class="auth-user">
+          <span class="hello"><strong>관리자</strong> 모드</span>
+          <a class="link" href="/admin/dashboard">대시보드</a>
+          <form class="logout-form" method="post" action="/admin/logout">
+            <input type="hidden" name="next" value="/admin/login">
+            <button type="submit" class="btn-logout">관리자 로그아웃</button>
+          </form>
+        </div>
+      {% endif %}
+
+      <!-- 통합검색 -->
+      <form class="search-form" action="/search" method="get">
+        <input type="text" name="q" placeholder="게시판명 & 통합검색" value="{{ request.query_params.get('q','') }}">
+        <button type="submit">검색</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="wrapper">
+    <!-- 헤더 배너 -->
+    <header class="header-banner">
+      <img src="/static/images/platforms_banner.png" alt="Platforms 배너">
+    </header>
+
+    <!-- 탭 메뉴 -->
+    {% set cat = category or '' %}
+    <nav class="tabs-wrapper">
+      <div class="tabs-left">
+        <a href="/trendy"  class="{{ 'active' if cat.startswith('trendy')  else '' }}">베스트</a>
+        <a href="/game"    class="{{ 'active' if cat.startswith('game')    else '' }}">게임</a>
+        <a href="/sports"  class="{{ 'active' if cat.startswith('sports')  else '' }}">스포츠</a>
+        <a href="/invest"  class="{{ 'active' if cat.startswith('invest')  else '' }}">투자</a>
+        <a href="/gallery" class="{{ 'active' if cat.startswith('gallery') else '' }}">갤러리</a>
+        <a href="/free"    class="{{ 'active' if cat.startswith('free')    else '' }}">일반</a>
+        <a href="/humor"   class="{{ 'active' if cat.startswith('humor')   else '' }}">유머</a>
+        <a href="/report"  class="{{ 'active' if cat.startswith('report')  else '' }}">신문고</a>
+      </div>
+      <div class="tabs-right">
+        <a href="/counsel" class="{{ 'active' if cat.startswith('counsel') else '' }}">상담요청</a>
+      </div>
+    </nav>
+
+    <!-- 컨텐츠 박스: 전체 폭 사용 -->
+    <main class="content content--full">
+      {% block content %}
+        {# 동적 include: category 값에 따라 자동 매핑 #}
+        {% set boards = ['trendy','game','sports','invest','gallery','free','humor','report','counsel'] %}
+        {% if not cat %}
+          {% set partial = 'boards/home.html' %}
+        {% elif cat in boards %}
+          {# 예: category='invest' → boards/invest_content.html #}
+          {% set partial = 'boards/' ~ cat ~ '_content.html' %}
+          {# 모든 게시판에 with context 사용하여 변수 전달 #}
+          {% include partial with context %}
+        {% else %}
+          {# 예: category='invest_content' / 'invest_write' / 'trendy_content' 등 #}
+          {% set partial = 'boards/' ~ cat ~ '.html' %}
+          {% include partial ignore missing %}
+        {% endif %}
+      {% endblock %}
+    </main>
+  </div>
+</body>
+</html>
