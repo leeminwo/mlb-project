@@ -50,12 +50,19 @@
         <!-- 현재 포인트 박스 제거 -->
       </div>
       <div class="vote-buttons">
-        <button class="vote vote--hit" id="hitButton" onclick="votePost('hit')" {% if not current_user %}disabled{% endif %}>
+        <!-- 로그인 상태 저장 (JavaScript에서 사용) -->
+        <div id="login-status" data-logged-in="{% if current_user %}true{% else %}false{% endif %}" style="display: none;"></div>
+        
+        <button class="vote vote--hit" id="hitButton" 
+                {% if current_user %}onclick="votePost('hit')"{% else %}onclick="alert('투표하려면 로그인이 필요합니다.')"{% endif %}>
           🎯 히트 <span class="count" id="hitCount">{{ post.likes or 0 }}</span>
         </button>
-        <button class="vote vote--bomb" id="bombButton" onclick="votePost('bomb')" {% if not current_user %}disabled{% endif %}>
+        <button class="vote vote--bomb" id="bombButton" 
+                {% if current_user %}onclick="votePost('bomb')"{% else %}onclick="alert('투표하려면 로그인이 필요합니다.')"{% endif %}>
           💣 폭망 <span class="count" id="bombCount">{{ post.dislikes or 0 }}</span>
         </button>
+         
+         
 
         <!-- 포인트 부족 안내 문구는 기본 숨김 처리 -->
         <p id="point-warning" class="point-warning" hidden>
@@ -140,6 +147,9 @@
 </div>
 
 <script>
+// 서버에서 전달받은 로그인 상태를 JavaScript 변수로 설정
+const isLoggedIn = document.getElementById('login-status').dataset.loggedIn === 'true';
+
 function editComment(commentId) {
   // 댓글 내용과 수정 폼을 토글
   const contentId = `comment-content-${commentId}`;
@@ -162,10 +172,11 @@ function cancelEdit(commentId) {
 let currentVote = null;
 
 async function votePost(voteType) {
-  {% if not current_user %}
-  alert('투표하려면 로그인이 필요합니다.');
-  return;
-  {% endif %}
+  // 로그인 상태 확인 (스크립트 시작 부분에서 설정된 변수 사용)
+  if (!isLoggedIn) {
+    alert('투표하려면 로그인이 필요합니다.');
+    return;
+  }
   
   const hitButton = document.getElementById('hitButton');
   const bombButton = document.getElementById('bombButton');
@@ -284,9 +295,13 @@ async function checkVoteStatus() {
       currentVote = data.vote_type;
     }
     
-    // 카운트 업데이트
-    document.getElementById('hitCount').textContent = data.likes_count;
-    document.getElementById('bombCount').textContent = data.dislikes_count;
+    // 카운트 업데이트 (서버 응답이 유효할 때만)
+    if (data.likes_count !== null && data.likes_count !== undefined) {
+      document.getElementById('hitCount').textContent = data.likes_count;
+    }
+    if (data.dislikes_count !== null && data.dislikes_count !== undefined) {
+      document.getElementById('bombCount').textContent = data.dislikes_count;
+    }
     
     // 포인트 확인
     if (data.can_vote === false) {
@@ -300,8 +315,8 @@ async function checkVoteStatus() {
   }
 }
 
-// 페이지 로드 시 실행
-document.addEventListener('DOMContentLoaded', function() {
-  checkVoteStatus();
-});
+// 페이지 로드 시 실행 (투표 상태 확인 비활성화)
+// document.addEventListener('DOMContentLoaded', function() {
+//   checkVoteStatus();
+// });
 </script>

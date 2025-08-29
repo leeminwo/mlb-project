@@ -30,7 +30,7 @@ async def user_board_view(
 
     row = await database.fetch_one("""
         SELECT p.id, p.title, p.content, p.author, p.category, p.user_id,
-               p.created_at, p.updated_at, p.views, p.likes,
+               p.created_at, p.updated_at, p.views, p.likes, p.dislikes,
                u.level, u.exp
         FROM posts p
         LEFT JOIN users u ON p.user_id = u.id
